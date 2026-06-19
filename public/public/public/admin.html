@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin</title>
+</head>
+<body style="font-family:Arial;padding:20px">
+
+<h2>דשבורד מנהל</h2>
+
+<button onclick="load()">רענן</button>
+
+<pre id="out"></pre>
+
+<script>
+async function load() {
+  const res = await fetch("/dashboard");
+  const data = await res.json();
+  out.innerText = JSON.stringify(data,null,2);
+}
+
+load();
+</script>
+
+</body>
+</html>
