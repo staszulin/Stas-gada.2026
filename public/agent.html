@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent</title>
+</head>
+<body style="font-family:Arial;padding:20px">
+
+<h2>יצירת הזמנה</h2>
+
+<input id="chain" placeholder="רשת"><br><br>
+<input id="branch" placeholder="סניף"><br><br>
+<input id="city" placeholder="עיר"><br><br>
+<input id="address" placeholder="כתובת"><br><br>
+<textarea id="notes" placeholder="הערות"></textarea><br><br>
+
+<button onclick="send()">שלח</button>
+
+<p id="msg"></p>
+
+<script>
+async function send() {
+  const res = await fetch("/orders", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      chain: chain.value,
+      branch: branch.value,
+      city: city.value,
+      address: address.value,
+      notes: notes.value
+    })
+  });
+
+  const data = await res.json();
+  msg.innerText = "נשלח ✔ " + data.id;
+}
+</script>
+
+</body>
+</html>
