@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warehouse</title>
+</head>
+<body style="font-family:Arial;padding:20px">
+
+<h2>מחסן</h2>
+
+<button onclick="load()">רענן</button>
+
+<div id="list"></div>
+
+<script>
+async function load() {
+  const res = await fetch("/orders");
+  const data = await res.json();
+
+  list.innerHTML = data.map(o => `
+    <div style="border:1px solid #ccc;padding:10px;margin:10px">
+      <b>${o.chain}</b> - ${o.branch}<br>
+      ${o.city} | ${o.zone}<br>
+      סטטוס: ${o.status}<br>
+
+      משטחים:
+      <input id="p${o.id}" value="${o.pallets}" style="width:50px">
+
+      <button onclick="update(${o.id})">עדכן</button>
+      <button onclick="status(${o.id},'picking')">ליקוט</button>
+      <button onclick="status(${o.id},'ready')">מוכן</button>
+    </div>
+  `).join("");
+}
+
+async function update(id) {
+  await fetch("/orders/" + id, {
+    method:"PATCH",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({pallets:+document.getElementById("p"+id).value})
+  });
+  load();
+}
+
+async function status(id,s) {
+  await fetch("/orders/"+id,{
+    method:"PATCH",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({status:s})
+  });
+  load();
+}
+
+load();
+</script>
+
+</body>
+</html>
